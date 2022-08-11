@@ -1,0 +1,40 @@
+{
+  "name": "jh_board",
+  "version": "1.0.0",
+  "description": "Create a bulletin board for corporate assignments",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "jest --watchAll",
+    "coverage": "jest --coverage --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Choi-jeonghoon/JH_board.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Choi-jeonghoon/JH_board/issues"
+  },
+  "homepage": "https://github.com/Choi-jeonghoon/JH_board#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@prisma/client": "^4.1.1",
+    "babel-jest": "^28.1.3",
+    "dotenv": "^16.0.1",
+    "jest": "^28.1.3",
+    "nodemon": "^2.0.19",
+    "prisma": "^4.1.1",
+    "supertest": "^6.2.4",
+    "swagger-jsdoc": "^6.2.2",
+    "swagger-ui-express": "^4.5.0"
+  }
+}
