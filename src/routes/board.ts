@@ -1,5 +1,5 @@
 import express from 'express';
-import * as boardController from '../controllers/board.js';
+import { boardController } from '../controllers';
 const router = express.Router();
 
 router.get('/boards/', boardController.getBoards); //게시판 검색

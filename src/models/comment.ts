@@ -1,9 +1,4 @@
-import prismaClient from '../prisma/index.js';
-
-//ORM 작성시
-// export const getBoard = async () => {
-//   return await prismaClient.boards.get({});
-// };
+import prismaClient from '../prisma';
 
 export const createComment = async (boardId, userId, comment, parent_id) => {
   let cdepth;

@@ -1,20 +1,23 @@
+import { Request, Response } from 'express';
 import { boardServices } from '../services/index.js';
 
-export const getBoardWithComment = async (req, res) => {
+const getBoardWithComment = async (req: Request, res: Response) => {
   try {
-    const boardId = req.params.boardId;
-    const pageNum = req.query.page;
-    const boardSearchResult = await boardServices.getBoardWithComment(
+    const boardId = req.params.id;
+    const commentOffset = req.query.offset;
+    const commentLimit = req.query.limit;
+    const readBoard = await boardServices.getBoardWithComment(
       boardId,
-      pageNum
+      commentOffset,
+      commentLimit
     );
-    return res.status(200).json(boardSearchResult);
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
+    return res.status(200).json(readBoard);
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({ message: error.message });
   }
 };
 
-export const getBoards = async (req, res) => {
+const getBoards = async (req: Request, res: Response) => {
   try {
     const { keyword } = req.query;
     const boardSearchResult = await boardServices.getBoards(keyword);
@@ -27,7 +30,7 @@ export const getBoards = async (req, res) => {
   }
 };
 
-export const increaseView = async (req, res) => {
+const increaseView = async (req: Request, res: Response) => {
   try {
     const boardId = req.params.boardId;
     const { userId } = req.body;
@@ -37,3 +40,5 @@ export const increaseView = async (req, res) => {
     res.status(err.statusCode || 500).json({ message: 'err.message ' });
   }
 };
+
+export default { getBoardWithComment, getBoards, increaseView };
