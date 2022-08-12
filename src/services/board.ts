@@ -1,4 +1,4 @@
-import { boardModels } from './models';
+import { boardModels } from '../models';
 
 export const getBoardWithComment = async (
   boardId,
