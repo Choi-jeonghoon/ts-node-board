@@ -1,14 +1,14 @@
-import prismaClient from '../prisma';
+import prisma from '../prisma';
+interface CreateCommentDto {
+  boardId: string;
+  userId: string;
+  comment: string;
+  parent_id: string;
+  cdepth: number;
+}
 
-export const createComment = async (boardId, userId, comment, parent_id) => {
-  let cdepth;
-  if (parent_id !== undefined) {
-    let pdepth =
-      await prismaClient.$queryRaw`SELECT cdepth FROM comment WHERE id=${parent_id}`;
-    cdepth = Number(pdepth[0].cdepth) + 1;
-  } else {
-    cdepth = 0;
-  }
+const createComment = async (createCommentDto: CreateCommentDto) => {
+  const { boardId, userId, comment, parent_id, cdepth } = createCommentDto;
   const query = `
     INSERT INTO comment (
       board_id,
@@ -22,15 +22,13 @@ export const createComment = async (boardId, userId, comment, parent_id) => {
         ${parent_id ? `, ${parent_id}, ${cdepth}` : ``}
     );
   `;
-  await prismaClient.$queryRawUnsafe(query);
+  await prisma.$queryRawUnsafe(query);
 };
 
-// export const getComment = async pageNum => {
-//   const start = (pageNum - 1) * 5;
-//   const query = `
-//   SELECT *
-//   FROM comment
-//   ${start ? `LIMIT ${start},5` : `LIMIT 0 ,5`}`;
-//   return query;
-//   // return await prismaClient.$queryRawUnsafe
-// };
+const readComment = async (parent_id: string) => {
+  return await prisma.$queryRaw<
+    { cdepth: number }[]
+  >`SELECT cdepth FROM comment WHERE id=${parent_id}`;
+};
+
+export default { createComment, readComment };

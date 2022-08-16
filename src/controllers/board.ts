@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
-import { boardServices } from '../services/index.js';
+import { boardServices } from '../services/index';
+import { HttpError } from '../common/httperr';
 
-const getBoardWithComment = async (req: Request, res: Response) => {
+const getBoardWithComment = async (
+  req: Request<{ id: string }, {}, {}, { offset: string; limit: string }>,
+  res: Response
+) => {
   try {
     const boardId = req.params.id;
     const commentOffset = req.query.offset;
@@ -13,32 +17,49 @@ const getBoardWithComment = async (req: Request, res: Response) => {
     );
     return res.status(200).json(readBoard);
   } catch (error) {
-    return res.status(error.statusCode || 500).json({ message: error.message });
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode || 500)
+        .json({ message: error.message });
+    }
   }
 };
 
-const getBoards = async (req: Request, res: Response) => {
+const getBoards = async (
+  req: Request<{}, {}, {}, { keyword: string }>,
+  res: Response
+) => {
   try {
-    const { keyword } = req.query;
+    const { keyword} = req.query;
     const boardSearchResult = await boardServices.getBoards(keyword);
     if (boardSearchResult.count === 0 || keyword == '') {
       return res.sendStatus(204);
     }
     return res.status(200).json(boardSearchResult);
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
+  } catch (error) {
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode || 500)
+        .json({ message: error.message });
+    }
   }
 };
 
-const increaseView = async (req: Request, res: Response) => {
+const increaseView = async (
+  req: Request<{ boardId: string }, {}, { userId: string }, {}>,
+  res: Response
+) => {
   try {
     const boardId = req.params.boardId;
     const { userId } = req.body;
-    const view = await services.increaseView(boardId, userId);
+    const view = await boardServices.increaseView(boardId, userId);
     return res.status(200).json(view);
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: 'err.message ' });
+  } catch (error) {
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode || 500)
+        .json({ message: 'err.message ' });
+    }
   }
 };
-
 export default { getBoardWithComment, getBoards, increaseView };

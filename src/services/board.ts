@@ -1,9 +1,9 @@
 import { boardModels } from '../models';
 
-export const getBoardWithComment = async (
-  boardId,
-  commentOffset,
-  commentLimit
+const getBoardWithComment = async (
+  boardId: string,
+  commentOffset: string,
+  commentLimit: string
 ) => {
   const existingBoard = await boardModels.getBoardByBoardId(boardId);
   if (!existingBoard) {
@@ -18,7 +18,7 @@ export const getBoardWithComment = async (
   );
 };
 
-export const getBoards = async keyword => {
+const getBoards = async (keyword: string) => {
   const boardSearchResult = await boardModels.getBoards(keyword);
   if (keyword.length === 0) {
     const error = new Error('검색어가 없습니다.');
@@ -33,13 +33,15 @@ export const getBoards = async keyword => {
   return boardSearchResult;
 };
 
-export const updateBoardViews = async (boardId, userId) => {
+const increaseView = async (boardId: string, userId: string) => {
   const existingUser = await boardModels.getUserById(boardId, userId);
   if (existingUser) {
     const view = Number((await boardModels.readView(boardId))[0].cnt);
     return view;
   }
-  await boardModels.updateBoardViews(boardId, userId);
+  await boardModels.increaseView(boardId, userId);
   const view = Number((await boardModels.readView(boardId))[0].cnt);
   return view;
 };
+
+export default { getBoardWithComment, getBoards, increaseView };

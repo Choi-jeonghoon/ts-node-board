@@ -1,18 +1,32 @@
-import { commentServices } from '../services/index.js';
+import { commentServices } from '../services/index';
+import { Request, Response } from 'express';
+import { HttpError } from '../common/httperr';
 
-const createComment = async (req: Request, res: Response) => {
+const createComment = async (
+  req: Request<
+    {},
+    {},
+    { boardId: string; userId: string; comment: string; parent_id: string },
+    {}
+  >,
+  res: Response
+) => {
   try {
-    const boardId = req.params.boardId;
-    const { userId, comment, parent_id } = req.body; //parent_id는 1부터 시작
-    const boardComment = await commentServices.createComment(
+    const { boardId, userId, comment, parent_id } = req.body; //parent_id는 1부터 시작
+    const createCommentDto = {
       boardId,
       userId,
       comment,
-      parent_id
-    );
+      parent_id,
+    };
+    await commentServices.createComment(createCommentDto);
     return res.status(200).json({ message: 'success' });
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ message: err.message });
+  } catch (error) {
+    if (error instanceof HttpError) {
+      return res
+        .status(error.statusCode || 500)
+        .json({ message: error.message });
+    }
   }
 };
 

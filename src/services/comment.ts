@@ -1,6 +1,16 @@
 import { commentModels } from '../models';
 
-export const createComment = async (boardId, userId, comment, parent_id) => {
-  return await commentModels.createComment(boardId, userId, comment, parent_id);
+interface CreateCommentDto {
+  boardId: string;
+  userId: string;
+  comment: string;
+  parent_id: string;
+}
+
+const createComment = async (createCommentDto: CreateCommentDto) => {
+  const comment = await commentModels.readComment(createCommentDto.parent_id);
+  const cdepth = comment.length > 0 ? comment[0].cdepth + 1 : 0;
+  return await commentModels.createComment({ ...createCommentDto, cdepth });
 };
 
+export default { createComment };
