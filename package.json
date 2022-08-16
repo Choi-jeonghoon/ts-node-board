@@ -9,7 +9,7 @@
     "test": "jest --watchAll",
     "coverage": "jest --coverage --watchAll",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "api-docs": "swagger-cli bundle ./src/swagger/openapi.yaml --outfile build/swagger.yaml --type yaml"
+    "api-docs": "swagger-cli bundle --outfile src/swagger/apiDocs.yaml --type yaml"
   },
   "repository": {
     "type": "git",
