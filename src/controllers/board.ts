@@ -30,7 +30,7 @@ const getBoards = async (
   res: Response
 ) => {
   try {
-    const { keyword} = req.query;
+    const { keyword } = req.query;
     const boardSearchResult = await boardServices.getBoards(keyword);
     if (boardSearchResult.count === 0 || keyword == '') {
       return res.sendStatus(204);
