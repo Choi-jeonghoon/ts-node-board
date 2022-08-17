@@ -1,5 +1,5 @@
 import { boardModels } from '../models';
-
+import { HttpError } from '../common/httperr';
 const getBoardWithComment = async (
   boardId: string,
   commentOffset: string,
@@ -7,8 +7,8 @@ const getBoardWithComment = async (
 ) => {
   const existingBoard = await boardModels.getBoardByBoardId(boardId);
   if (!existingBoard) {
-    const error = new Error('게시판이 존재하지 않습니다.');
-    error.statusCode = 402;
+    const error = new HttpError(402, '게시판이 존재하지 않습니다.');
+
     throw error;
   }
   return await boardModels.getBoardWithComment(
@@ -21,13 +21,13 @@ const getBoardWithComment = async (
 const getBoards = async (keyword: string) => {
   const boardSearchResult = await boardModels.getBoards(keyword);
   if (keyword.length === 0) {
-    const error = new Error('검색어가 없습니다.');
-    error.statusCode = 402;
+    const error = new HttpError(402, '검색어가 없습니다.');
+
     throw error;
   }
   if (boardSearchResult.length === 0) {
-    const error = new Error('검색 결과가 없습니다.');
-    error.statusCode = 403;
+    const error = new HttpError(403, '검색 결과가 없습니다.');
+
     throw error;
   }
   return boardSearchResult;
@@ -39,7 +39,7 @@ const increaseView = async (boardId: string, userId: string) => {
     const view = Number((await boardModels.readView(boardId))[0].cnt);
     return view;
   }
-  await boardModels.increaseView(boardId, userId);
+  await boardModels.updateBoardViews(boardId, userId);
   const view = Number((await boardModels.readView(boardId))[0].cnt);
   return view;
 };

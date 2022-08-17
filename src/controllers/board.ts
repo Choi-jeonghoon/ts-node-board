@@ -3,11 +3,11 @@ import { boardServices } from '../services/index';
 import { HttpError } from '../common/httperr';
 
 const getBoardWithComment = async (
-  req: Request<{ id: string }, {}, {}, { offset: string; limit: string }>,
+  req: Request<{ boardId: string }, {}, {}, { offset: string; limit: string }>,
   res: Response
 ) => {
   try {
-    const boardId = req.params.id;
+    const boardId = req.params.boardId;
     const commentOffset = req.query.offset;
     const commentLimit = req.query.limit;
     const readBoard = await boardServices.getBoardWithComment(
@@ -30,11 +30,8 @@ const getBoards = async (
   res: Response
 ) => {
   try {
-    const { keyword} = req.query;
+    const { keyword } = req.query;
     const boardSearchResult = await boardServices.getBoards(keyword);
-    if (boardSearchResult.count === 0 || keyword == '') {
-      return res.sendStatus(204);
-    }
     return res.status(200).json(boardSearchResult);
   } catch (error) {
     if (error instanceof HttpError) {

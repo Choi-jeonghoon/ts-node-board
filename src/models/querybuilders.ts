@@ -1,4 +1,4 @@
-export const searchFilter = keyword => {
+export const searchFilter = (keyword: string) => {
   const searchColumn = [
     'board_title',
     'nick_name',
